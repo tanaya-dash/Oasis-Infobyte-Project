@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Log in Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('https://images.pexels.com/photos/1711323/pexels-photo-1711323.jpeg?auto=compress&cs=tinysrgb&w=600');
+      background-size: cover;
+    }
+    .container {
+      width: 300px;
+      text-align: center;
+      border: 5px solid black;
+      border-radius: 25px;
+      padding: 20px;
+      font-family: 'Times New Roman', Times, serif;
+      background: white;
+    }
+    .form-header {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: medium;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h3 class="form-header">LOG IN</h3>
+  <form id="loginForm">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    console.log('Email:', email);
+    console.log('Password:', password);
+  });
+
+  window.addEventListener('beforeunload', function(event) {
+    event.preventDefault();
+    event.returnValue = ''; 
+    const confirmationMessage = 'Are you sure you want to leave? Your data may not be saved.';
+    (event || window.event).returnValue = confirmationMessage;
+    return confirmationMessage;
+  });
+</script>
+
+</body>
+</html>

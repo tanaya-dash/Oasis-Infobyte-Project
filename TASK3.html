@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <title>TO DO </title>
+  <style>
+    body{
+    color:rgb(27, 2, 2);
+    margin:0px;
+    padding:0px;
+    background-image: url('https://images.pexels.com/photos/2680270/pexels-photo-2680270.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-repeat:no-repeat ;
+    background-size: cover;
+    h2{
+        font-family: Algerian,Arial, Helvetica, sans-serif;
+    }
+}
+  </style>
+   <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailsModalLabel">Detailed Content</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>This is your detailed content. You can add any information, images, or other elements here.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <h2 class="mt-3 mb-3">To Do</h2>
+   <form id="taskForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="taskName">Task Name:</label>
+        <input type="text" class="form-control" id="taskName" required>
+      </div>
+      <div class="form-group">
+        <label for="taskFile">Upload File:</label>
+        <input type="file" class="form-control-file" id="taskFile" accept=".txt, .pdf, .doc">
+      </div>
+      <div class="form-group">
+        <label for="dueDate">Due Date:</label>
+        <input type="date" class="form-control" id="dueDate">
+      </div>
+      <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+
+    
+    <ul id="taskList" class="list-group mt-3">
+      <!-- Tasks will be dynamically added here -->
+    </ul>
+  </div>
+
+  
+  <div class="modal fade" id="updateTaskModal" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateTaskModalLabel">Update Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="updateTaskName">Task Name:</label>
+            <input type="text" class="form-control" id="updateTaskName" required>
+          </div>
+          <div class="form-group">
+            <label for="updateTaskFile">Upload File:</label>
+            <input type="file" class="form-control-file" id="updateTaskFile" accept=".txt, .pdf, .doc">
+          </div>
+          <div class="form-group">
+            <label for="updateDueDate">Due Date:</label>
+            <input type="date" class="form-control" id="updateDueDate">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="updateTaskBtn">Update Task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  
+  <script>
+    $(document).ready(function () {
+      // Task Form Submission
+      $('#taskForm').submit(function (e) {
+        e.preventDefault();
+        const taskName = $('#taskName').val();
+        const taskFile = $('#taskFile').val().split('\\').pop(); // Extracts only the filename
+        const dueDate = $('#dueDate').val();
+
+        if (taskName.trim() === '') {
+          alert('Task name cannot be empty');
+          return;
+        }
+
+        
+        const taskItem = $('<li class="list-group-item"></li>')
+          .text(`${taskName} - ${taskFile} - Due: ${dueDate}`)
+          .append(
+            '<button type="button" class="btn btn-info btn-sm mr-2 update-btn" data-toggle="modal" data-target="#updateTaskModal">Update</button>',
+            '<button type="button" class="btn btn-danger btn-sm delete-btn">Delete</button>'
+          );
+
+        
+        $('#taskList').append(taskItem);
+
+        
+        $('#taskName').val('');
+        $('#taskFile').val('');
+        $('#dueDate').val('');
+      });
+
+      
+      $('#taskList').on('click', '.delete-btn', function () {
+        $(this).closest('li').remove();
+      });
+
+      
+      $('#taskList').on('click', '.update-btn', function () {
+        const taskText = $(this).closest('li').text().split(' - ');
+        $('#updateTaskName').val(taskText[0]);
+        $('#updateTaskFile').val(taskText[1]);
+        $('#updateDueDate').val(taskText[3].replace('Due: ', ''));
+      });
+
+      // Task Update - Save Changes
+      $('#updateTaskBtn').click(function () {
+        const updatedTaskName = $('#updateTaskName').val();
+        const updatedTaskFile = $('#updateTaskFile').val();
+        const updatedDueDate = $('#updateDueDate').val();
+        const updatedTaskText = `${updatedTaskName} - ${updatedTaskFile} - Due: ${updatedDueDate}`;
+
+        if (updatedTaskName.trim() === '') {
+          alert('Task name cannot be empty');
+          return;
+        }
+
+        // Update task text
+        $('.update-btn:visible').closest('li').text(updatedTaskText);
+
+        // Close the modal
+        $('#updateTaskModal').modal('hide');
+      });
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
